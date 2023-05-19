@@ -19,6 +19,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.get("/graphs")
 async def graph_generation():
     g = nx.erdos_renyi_graph(100, 0.1)

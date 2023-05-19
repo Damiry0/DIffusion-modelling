@@ -1,62 +1,63 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-
+import { GraphService } from './services/graph-service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-
-
 export class AppComponent implements OnInit {
   //@ViewChild('graphContainer') graphContainer!: ElementRef ;
   graphData: any;
 
-  constructor() {
-  }
+  constructor(private graphService: GraphService) {}
 
   ngOnInit(): void {
-    // Fetch JSON from an external endpoint
-    d3.json('http://localhost:8000/graphs').then(data => {
+    this.graphService.getGraph().subscribe((data) => {
       this.graphData = data;
       this.visualizeGraph();
     });
   }
 
-
   visualizeGraph(): void {
+    const width = 600 * 2;
+    const height = 400 * 2;
 
-    const width = 600*2;
-    const height = 400*2;
-
-    const svg = d3.select('#my_dataviz')
+    const svg = d3
+      .select('#my_dataviz')
       .append('svg')
       .attr('width', width)
       .attr('height', height)
       .append('g');
 
-    const link = svg.selectAll('line')
+    const link = svg
+      .selectAll('line')
       .data(this.graphData.links)
-      .join("line")
-      .style("stroke", "#aaa");
+      .join('line')
+      .style('stroke', '#aaa');
     // .enter()
     // .append('line')
     // .attr('stroke', '#999')
     // .attr('stroke-width', '1px');
 
-    const node = svg.selectAll('circle')
+    const node = svg
+      .selectAll('circle')
       .data(this.graphData.nodes)
-      .join("circle")
-      .attr("r", 20)
-      .style("fill", "#69b3a2");
+      .join('circle')
+      .attr('r', 20)
+      .style('fill', '#69b3a2');
     // .enter()
     // .append('circle')
     // .attr('r', 10)
     // .attr('fill', '#ff5722');
 
-    const simulation = d3.forceSimulation(this.graphData.nodes)
-      .force('link', d3.forceLink(this.graphData.links).id((d: any) => d.id))
+    const simulation = d3
+      .forceSimulation(this.graphData.nodes)
+      .force(
+        'link',
+        d3.forceLink(this.graphData.links).id((d: any) => d.id)
+      )
       .force('charge', d3.forceManyBody().strength(-400))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .on('end', ticked);
@@ -78,16 +79,12 @@ export class AppComponent implements OnInit {
     //   }));
 
     function ticked() {
-      link.attr('x1', (d: any) => d.source.x)
+      link
+        .attr('x1', (d: any) => d.source.x)
         .attr('y1', (d: any) => d.source.y)
         .attr('x2', (d: any) => d.target.x)
         .attr('y2', (d: any) => d.target.y);
-      node
-        .attr('cx', (d: any) => d.x)
-        .attr('cy', (d: any) => d.y);
+      node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
     }
-
   }
-
 }
-
