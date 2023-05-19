@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IndexComponent } from './index/index.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+      CommonModule,
     ],
   providers: [],
   bootstrap: [AppComponent]
