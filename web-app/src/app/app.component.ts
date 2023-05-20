@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as d3 from 'd3';
 import { GraphService } from './services/graph-service';
+import G6 from '@antv/g6';
+import { G6graphModel, graphModel } from './models/graph-model';
 
 @Component({
   selector: 'app-root',
@@ -8,83 +9,49 @@ import { GraphService } from './services/graph-service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  //@ViewChild('graphContainer') graphContainer!: ElementRef ;
-  graphData: any;
+  graphData!: graphModel;
+  selected: any;
 
   constructor(private graphService: GraphService) {}
 
   ngOnInit(): void {
     this.graphService.getGraph().subscribe((data) => {
       this.graphData = data;
-      this.visualizeGraph();
+      this.mapGraphData(data);
+      console.log(this.graphData);
+      this.visualizeGraph(this.graphData);
     });
   }
 
-  visualizeGraph(): void {
-    const width = 600 * 2;
-    const height = 400 * 2;
+  visualizeGraph(data: any): void {
+    const graph = new G6.Graph({
+      container: 'mountNode',
+      width: 800,
+      height: 500,
+      modes: {
+        default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // Allow users to drag canvas, zoom canvas, and drag nodes
+      },
+    });
+    graph.data(data);
+    graph.render();
+  }
 
-    const svg = d3
-      .select('#my_dataviz')
-      .append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .append('g');
-
-    const link = svg
-      .selectAll('line')
-      .data(this.graphData.links)
-      .join('line')
-      .style('stroke', '#aaa');
-    // .enter()
-    // .append('line')
-    // .attr('stroke', '#999')
-    // .attr('stroke-width', '1px');
-
-    const node = svg
-      .selectAll('circle')
-      .data(this.graphData.nodes)
-      .join('circle')
-      .attr('r', 20)
-      .style('fill', '#69b3a2');
-    // .enter()
-    // .append('circle')
-    // .attr('r', 10)
-    // .attr('fill', '#ff5722');
-
-    const simulation = d3
-      .forceSimulation(this.graphData.nodes)
-      .force(
-        'link',
-        d3.forceLink(this.graphData.links).id((d: any) => d.id)
-      )
-      .force('charge', d3.forceManyBody().strength(-400))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .on('end', ticked);
-
-    // node.call(d3.drag()
-    //   .on('start', (event: any, d: any) => {
-    //     if (!event.active) simulation.alphaTarget(0.3).restart();
-    //     d.fx = d.x;
-    //     d.fy = d.y;
-    //   })
-    //   .on('drag', (event: any, d: any) => {
-    //     d.fx = event.x;
-    //     d.fy = event.y;
-    //   })
-    //   .on('end', (event: any, d: any) => {
-    //     if (!event.active) simulation.alphaTarget(0);
-    //     d.fx = null;
-    //     d.fy = null;
-    //   }));
-
-    function ticked() {
-      link
-        .attr('x1', (d: any) => d.source.x)
-        .attr('y1', (d: any) => d.source.y)
-        .attr('x2', (d: any) => d.target.x)
-        .attr('y2', (d: any) => d.target.y);
-      node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
-    }
+  mapGraphData(graphData: graphModel): G6graphModel {
+    graphData.nodes = graphData.nodes.map((node) => {
+      node.id = node.id.toString();
+      return node;
+    });
+    graphData.links = graphData.links.map((edge) => {
+      edge.source = edge.source.toString();
+      edge.target = edge.target.toString();
+      return edge;
+    });
+    const toG6graphModel = (input: graphModel): G6graphModel => {
+      return {
+        nodes: input.nodes,
+        edges: input.links,
+      };
+    };
+    return toG6graphModel(graphData);
   }
 }

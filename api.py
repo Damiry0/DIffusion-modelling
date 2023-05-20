@@ -1,11 +1,9 @@
-import networkx as nx
 import ndlib.models.ModelConfig as mc
 import ndlib.models.opinions as op
-from pyvis.network import Network
-
-from typing import Union
+import networkx as nx
 from fastapi import FastAPI
 from networkx.readwrite import json_graph
+from pyvis.network import Network
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
