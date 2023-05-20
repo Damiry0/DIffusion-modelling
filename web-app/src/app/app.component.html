@@ -2,29 +2,33 @@
   <h1>Diffusion Modelling</h1>
 </header>
 
-
-<form class="form">
-<label>Select Opinion Model</label>
 <mat-form-field>
-  <mat-label>Model:</mat-label>
-  <mat-select [(value)]="selected">
-    <mat-option>None</mat-option>
-    <mat-option value="Voter">Voter</mat-option>
-    <mat-option value="QVoter">Q-Voter</mat-option>
-    <mat-option value="Majority">Majority Rule</mat-option>
-    <mat-option value="Sznajd">Sznajd Model</mat-option>
-    <mat-option value="COD">Cognitive Opinion Dynamics</mat-option>
-    <mat-option value="Bias">Algorithmic Bias Media Model</mat-option>
-    <mat-option value="Hegsel">Hegselmann-Krause</mat-option>
-    <mat-option value="WHegsel">Weighted Hegselmann-Krause</mat-option>
+  <mat-label>Select Opinion Model:</mat-label>
+  <mat-select aria-placeholder="Model">
+    <mat-option *ngFor="let model of models" [ngModel]="model">
+      {{ model.name }}
+    </mat-option>
   </mat-select>
-</mat-form-field>
   <label>Number of Nodes:</label>
   <mat-form-field class="example-full-width">
     <mat-label>Number of nodes</mat-label>
-    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+    <textarea number matInput placeholder="Ex. It makes me feel..."></textarea>
   </mat-form-field>
-</form>
+</mat-form-field>
 
-  <h2> Model</h2>
-  <figure id="mountNode"></figure>
+<h2>Model</h2>
+
+<figure id="mountNode"></figure>
+
+<ng-template ngIf="">
+  <mat-form-field>
+    <input
+      type="number"
+      class="form-control"
+      matInput
+      name="value"
+      placeholder="Q parameter"
+      formControlName="value"
+    />
+  </mat-form-field>
+</ng-template>

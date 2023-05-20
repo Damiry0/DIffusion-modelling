@@ -11,10 +11,24 @@ import { G6graphModel, graphModel } from './models/graph-model';
 export class AppComponent implements OnInit {
   graphData!: graphModel;
   selected: any;
+  selectedValue: any;
+
+  models = [
+    { id: 1, name: 'Voter' },
+    { id: 2, name: 'Q-Voter' },
+    { id: 3, name: 'Majority Rule' },
+    { id: 4, name: 'Sznajd Model' },
+    { id: 5, name: 'Cognitive Opinion Dynamics' },
+    { id: 6, name: 'Algorithmic Bias Media Model' },
+    { id: 7, name: 'Hegselmann-Krause' },
+    { id: 8, name: 'Weighted Hegselmann-Krause' },
+  ];
 
   constructor(private graphService: GraphService) {}
 
   ngOnInit(): void {
+    this.buildForm();
+
     this.graphService.getGraph().subscribe((data) => {
       this.graphData = data;
       this.mapGraphData(data);
@@ -54,4 +68,6 @@ export class AppComponent implements OnInit {
     };
     return toG6graphModel(graphData);
   }
+
+  buildForm() {}
 }
