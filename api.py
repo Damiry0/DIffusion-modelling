@@ -1,9 +1,12 @@
 import ndlib.models.ModelConfig as mc
 import ndlib.models.opinions as op
 import networkx as nx
+import uvicorn
 from fastapi import FastAPI
 from networkx.readwrite import json_graph
 from starlette.middleware.cors import CORSMiddleware
+
+from VoterDto import Item
 
 app = FastAPI()
 
@@ -25,35 +28,19 @@ async def graph_generation():
     return data
 
 
-@app.get("/voter")
-async def voter_model(data, q):
-    g = json_graph.node_link_graph(data);
+@app.post("/voter")
+async def voter_model(params: Item):
+    g = json_graph.node_link_graph(params.data)
 
     # Model selection
     model = op.VoterModel(g)
     config = mc.Configuration()
-    config.add_model_parameter('fraction_infected', q)
+    config.add_model_parameter('fraction_infected', params.initial_fraction)
 
     model.set_initial_status(config)
 
     # Simulation execution
-    iterations = model.iteration_bunch(200)
-    return iterations
-
-
-@app.get("/voter")
-async def voter_model(data, initial_fraction, iterations):
-    g = json_graph.node_link_graph(data)
-
-    # Model selection
-    model = op.VoterModel(g)
-    config = mc.Configuration()
-    config.add_model_parameter('fraction_infected', initial_fraction)
-
-    model.set_initial_status(config)
-
-    # Simulation execution
-    return model.iteration_bunch(iterations)
+    return model.iteration_bunch(params.iterations)
 
 
 @app.get("/qvoter")
@@ -158,3 +145,6 @@ async def hegselmann_krause_model(data, initial_fraction, iterations, epsilion=0
 
     # Simulation execution
     return model.iteration_bunch(iterations)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)

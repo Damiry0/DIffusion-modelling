@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GraphService } from './services/graph-service';
 import G6 from '@antv/g6';
-import { G6graphModel, graphModel } from './models/graph-model';
+import { G6graphModel, Graph, graphModel } from './models/graph-model';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +9,9 @@ import { G6graphModel, graphModel } from './models/graph-model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  graphData!: graphModel;
   selected: any;
-  selectedValue: any;
+  response: any;
+  graph: Graph | undefined;
 
   models = [
     { id: 1, name: 'Voter' },
@@ -29,12 +29,25 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
 
-    this.graphService.getGraph().subscribe((data) => {
+    this.graphService.getGraph().subscribe((graph) => {
+      console.log(graph);
+      this.graphService
+        .getVoters({
+          data: graph,
+          initial_fraction: 0.1,
+          iterations: 200,
+        })
+        .subscribe((voters) => {
+          this.response = voters;
+        });
+    });
+
+    /*this.graphService.getGraph().pipe(subscribe((data) => {
       this.graphData = data;
       this.mapGraphData(data);
       console.log(this.graphData);
       this.visualizeGraph(this.graphData);
-    });
+    }));*/
   }
 
   visualizeGraph(data: any): void {

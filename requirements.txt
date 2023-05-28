@@ -1,5 +1,5 @@
 fastapi==0.95.2
-ndlib==4.0.2
+ndlib==5.1.1
 networkx==3.1
 pyvis==0.3.1
 starlette==0.27.0
