@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     this.graphService.getGraph().subscribe((graph) => {
       console.log(graph);
       this.graphService
-        .getVoters({
+        .getIterations('voter', {
           data: graph,
           initial_fraction: 0.1,
           iterations: 200,

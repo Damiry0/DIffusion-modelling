@@ -43,7 +43,7 @@ async def voter_model(params: Item):
     return model.iteration_bunch(params.iterations)
 
 
-@app.get("/qvoter")
+@app.post("/qvoter")
 async def qvoter_model(data, initial_fraction, iterations, q):
     g = json_graph.node_link_graph(data)
 
@@ -59,7 +59,7 @@ async def qvoter_model(data, initial_fraction, iterations, q):
     return model.iteration_bunch(iterations)
 
 
-@app.get("/majority-rule")
+@app.post("/majority-rule")
 async def majority_rule_model(data, initial_fraction, iterations, q):
     g = json_graph.node_link_graph(data)
 
@@ -75,7 +75,7 @@ async def majority_rule_model(data, initial_fraction, iterations, q):
     return model.iteration_bunch(iterations)
 
 
-@app.get("/sznajd")
+@app.post("/sznajd")
 async def sznajd_model(data, initial_fraction, iterations):
     g = json_graph.node_link_graph(data)
 
@@ -90,7 +90,7 @@ async def sznajd_model(data, initial_fraction, iterations):
     return model.iteration_bunch(iterations)
 
 
-@app.get("/cod")
+@app.post("/cod")
 async def cod_model(data, initial_fraction, iterations, i=0.15, b_min=0, b_max=1, t_min=0, t_max=1,
                     r_negative=1.0 / 3, r_neutral=1.0 / 3, r_positive=1.0 / 3):
     g = json_graph.node_link_graph(data)
@@ -114,7 +114,7 @@ async def cod_model(data, initial_fraction, iterations, i=0.15, b_min=0, b_max=1
     return model.iteration_bunch(iterations)
 
 
-@app.get("/bias")
+@app.post("/bias")
 async def algorithm_bias_model(data, initial_fraction, iterations, epsilion=0.32, gamma=1):
     g = json_graph.node_link_graph(data)
 
@@ -131,7 +131,7 @@ async def algorithm_bias_model(data, initial_fraction, iterations, epsilion=0.32
     return model.iteration_bunch(iterations)
 
 
-@app.get("/hegselmann")
+@app.post("/hegselmann")
 async def hegselmann_krause_model(data, initial_fraction, iterations, epsilion=0.32):
     g = json_graph.node_link_graph(data)
 
