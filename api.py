@@ -7,6 +7,7 @@ from networkx.readwrite import json_graph
 from starlette.middleware.cors import CORSMiddleware
 
 from ModelParams import UpdatedModelParams
+from iterations import parse_iterations
 
 app = FastAPI()
 
@@ -40,7 +41,10 @@ async def voter_model(params: UpdatedModelParams):
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
 
 
 @app.post("/qvoter")

@@ -4,7 +4,7 @@
 
 <!--<mat-form-field>-->
 <!--  <mat-label>Select Opinion Model:</mat-label>-->
-<!--  <mat-select aria-placeholder="Model">-->
+<!--  <mat-select aria-placeholder="Model" value>-->
 <!--    <mat-option *ngIf-="data">-->
 <!--      {{ model.name }}-->
 <!--    </mat-option>-->
@@ -18,7 +18,8 @@
 
 <h2>Model</h2>
 
-<figure id="mountNode"></figure>
+<figure id="mountNode" ></figure>
+
 
 <ng-template ngIf="">
   <mat-form-field>
@@ -32,3 +33,57 @@
     />
   </mat-form-field>
 </ng-template>
+
+
+<!--<ng-template *ngIf="value=voter">-->
+<!--   <input-->
+<!--      type="number"-->
+<!--      class="form-control"-->
+<!--      matInput-->
+<!--      name="value"-->
+<!--      placeholder="Q parameter"-->
+<!--      formControlName="value"-->
+<!--    />-->
+<!--</ng-template>-->
+
+<!--<ng-template *ngIf="value=cod">-->
+<!--   <input-->
+<!--      type="number"-->
+<!--      class="form-control"-->
+<!--      matInput-->
+<!--      name="value"-->
+<!--      placeholder="Q parameter"-->
+<!--      placeholder="A parameter"-->
+<!--      formControlName="value"-->
+<!--    />-->
+<!--  <input-->
+<!--      type="number"-->
+<!--      class="form-control"-->
+<!--      matInput-->
+<!--      name="value"-->
+<!--      placeholder="Q parameter"-->
+<!--      formControlName="value"-->
+<!--    />-->
+<!--  <input-->
+<!--      type="number"-->
+<!--      class="form-control"-->
+<!--      matInput-->
+<!--      name="value"-->
+<!--      placeholder="Q parameter"-->
+<!--      formControlName="value"-->
+<!--    />-->
+<!--  <input-->
+<!--      type="number"-->
+<!--      class="form-control"-->
+<!--      matInput-->
+<!--      name="value"-->
+<!--      placeholder="Q parameter"-->
+<!--      formControlName="value"-->
+<!--    />-->
+<!--</ng-template>-->
+
+<h2>Data</h2>
+
+<button class="btn btn-primary" (click)="animateGraph();" type="button">Call</button>
+
+
