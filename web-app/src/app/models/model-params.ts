@@ -13,6 +13,6 @@ export interface ModelParams {
   r_negative?: number;
   r_neutral?: number;
   r_positive?: number;
-  epsilion?: number;
+  epsilon?: number;
   gamma?: number;
 }
