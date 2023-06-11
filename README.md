@@ -1,7 +1,7 @@
 # Diffusion Modelling
 Modeling diffusion (information) in social networks/graphs.
 ## Website
-TODO
+Preview version available at: https://diffusion-modelling.vercel.app/
 
 ## Local
 
