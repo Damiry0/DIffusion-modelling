@@ -8,7 +8,7 @@ class ModelParams(BaseModel):
     data: object
     initial_fraction: float
     iterations: int
-    q: float
+    q: int
     i: float
     b_min: float
     b_max: float
@@ -17,7 +17,7 @@ class ModelParams(BaseModel):
     r_negative: float
     r_neutral: float
     r_positive: float
-    epsilion: float
+    epsilon: float
     gamma: float
 
 

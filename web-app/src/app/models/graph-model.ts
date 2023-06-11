@@ -31,9 +31,10 @@ interface Links {
   target: string;
 }
 
-export interface G6graphModel {
-  nodes: Nodes[];
-  edges: Links[];
+export interface Model {
+  id: number;
+  name: string;
+  path: string;
 }
 
 export interface Graph {

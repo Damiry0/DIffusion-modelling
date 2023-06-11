@@ -1,7 +1,4 @@
-class VotersDTO:
-    """Base DTO class for Voter model based on return format of iterations"""
-    initial_condition = list
-    iterations = list
+from DTO import VotersDTO
 
 
 def parse_iterations(iterations: list):
@@ -16,7 +13,8 @@ def parse_iterations(iterations: list):
             temp_list.append(data)
     voters.initial_condition = temp_list
     for i in range(1, len(iterations)):
-        for key, value in iterations[i]['status'].items():  # Retrurns subsequent iteration changes
+        # data = None
+        for key, value in iterations[i]['status'].items():  # Returns subsequent iteration changes
             data = {"key": str(key),
                     "value": str(value)
                     }

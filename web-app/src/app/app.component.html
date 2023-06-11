@@ -2,88 +2,261 @@
   <h1>Diffusion Modelling</h1>
 </header>
 
-<!--<mat-form-field>-->
-<!--  <mat-label>Select Opinion Model:</mat-label>-->
-<!--  <mat-select aria-placeholder="Model" value>-->
-<!--    <mat-option *ngIf-="data">-->
-<!--      {{ model.name }}-->
-<!--    </mat-option>-->
-<!--  </mat-select>-->
-<!--  <label>Number of Nodes:</label>-->
-<!--  <mat-form-field class="example-full-width">-->
+
+<h4>Select Opinion Model:</h4>
+<mat-form-field appearance="fill">
+  <mat-label>Model</mat-label>
+  <mat-select [(ngModel)]="selectedModel" name="model">
+    <mat-option *ngFor="let model of models" [value]="model.id">
+      {{model.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<p>Selected model: {{selectedModel}}</p>
+
+
+
+<!-- <mat-form-field class="example-full-width">-->
 <!--    <mat-label>Number of nodes</mat-label>-->
 <!--    <textarea number matInput placeholder="Ex. It makes me feel..."></textarea>-->
 <!--  </mat-form-field>-->
-<!--</mat-form-field>-->
 
-<h2>Model</h2>
+<!--<h2>Model</h2>-->
 
 <figure id="mountNode" ></figure>
 
 
-<ng-template ngIf="">
-  <mat-form-field>
-    <input
-      type="number"
-      class="form-control"
-      matInput
-      name="value"
-      placeholder="Q parameter"
-      formControlName="value"
-    />
-  </mat-form-field>
+<!--<ng-template>-->
+<!--  <mat-form-field>-->
+<!--    <input-->
+<!--      type="number"-->
+<!--      class="form-control"-->
+<!--      matInput-->
+<!--      name="value"-->
+<!--      placeholder="Q parameter"-->
+<!--      formControlName="value"-->
+<!--    />-->
+<!--  </mat-form-field>-->
+<!--</ng-template>-->
+
+
+<ng-template [ngIf]="selectedModel==1">
+     <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
 </ng-template>
 
+<ng-template [ngIf]="selectedModel==2">
+   <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+     <label>
+    Q parameter:
+    <input type="text" formControlName="q">
+  </label>
+       <br>
 
-<!--<ng-template *ngIf="value=voter">-->
-<!--   <input-->
-<!--      type="number"-->
-<!--      class="form-control"-->
-<!--      matInput-->
-<!--      name="value"-->
-<!--      placeholder="Q parameter"-->
-<!--      formControlName="value"-->
-<!--    />-->
-<!--</ng-template>-->
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
+</ng-template>
 
-<!--<ng-template *ngIf="value=cod">-->
-<!--   <input-->
-<!--      type="number"-->
-<!--      class="form-control"-->
-<!--      matInput-->
-<!--      name="value"-->
-<!--      placeholder="Q parameter"-->
-<!--      placeholder="A parameter"-->
-<!--      formControlName="value"-->
-<!--    />-->
-<!--  <input-->
-<!--      type="number"-->
-<!--      class="form-control"-->
-<!--      matInput-->
-<!--      name="value"-->
-<!--      placeholder="Q parameter"-->
-<!--      formControlName="value"-->
-<!--    />-->
-<!--  <input-->
-<!--      type="number"-->
-<!--      class="form-control"-->
-<!--      matInput-->
-<!--      name="value"-->
-<!--      placeholder="Q parameter"-->
-<!--      formControlName="value"-->
-<!--    />-->
-<!--  <input-->
-<!--      type="number"-->
-<!--      class="form-control"-->
-<!--      matInput-->
-<!--      name="value"-->
-<!--      placeholder="Q parameter"-->
-<!--      formControlName="value"-->
-<!--    />-->
-<!--</ng-template>-->
+<ng-template [ngIf]="selectedModel==3">
+   <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+     <label>
+    Q parameter:
+    <input type="text" formControlName="q">
+  </label>
+       <br>
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
+</ng-template>
+
+<ng-template [ngIf]="selectedModel==4">
+
+
+   <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
+</ng-template>
+
+<ng-template [ngIf]="selectedModel==5">
+
+
+   <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+
+     <label>
+    I parameter:
+    <input type="text" formControlName="i">
+  </label>
+       <br>
+
+     <label>
+    B range min parameter:
+    <input type="text" formControlName="b_min">
+  </label>
+       <br>
+
+     <label>
+    B range max parameter:
+    <input type="text" formControlName="b_max">
+  </label>
+       <br>
+
+     <label>
+    T range min parameter:
+    <input type="text" formControlName="t_min">
+  </label>
+       <br>
+
+     <label>
+    T range max parameter:
+    <input type="text" formControlName="t_max">
+  </label>
+       <br>
+
+     <label>
+    R fraction negative parameter:
+    <input type="text" formControlName="r_negative">
+  </label>
+       <br>
+
+     <label>
+    R fraction neutral parameter:
+    <input type="text" formControlName="r_neutral">
+  </label>
+       <br>
+
+     <label>
+    R fraction positive parameter:
+    <input type="text" formControlName="r_positive">
+  </label>
+       <br>
+
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
+</ng-template>
+
+<ng-template [ngIf]="selectedModel==6">
+
+
+   <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+
+      <label>
+    Epsilon parameter:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+
+     <label>
+    Gamma parameter:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
+</ng-template>
+
+<ng-template [ngIf]="selectedModel==7">
+
+
+   <form [formGroup]="ModelParams" (ngSubmit)="callingFunction()">
+
+      <label>
+    Epsilon parameter:
+    <input type="text" formControlName="epsilon">
+  </label>
+       <br>
+  <label>
+    Fraction infected:
+    <input type="text" formControlName="initial_fraction">
+  </label>
+       <br>
+        <label>
+    Iterations:
+    <input type="text" formControlName="iterations">
+  </label>
+       <br>
+<button type="submit" [disabled]="">Save model params</button>
+       <div class="space"> </div>
+       <button type="reset">Reset</button>
+</form>
+</ng-template>
 
 <h2>Data</h2>
 
-<button class="btn btn-primary" (click)="animateGraph();" type="button">Call</button>
+<!--<button class="btn btn-primary" (click)="animateGraph();" type="button">Call</button>-->
 
 

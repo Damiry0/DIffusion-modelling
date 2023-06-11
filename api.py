@@ -60,7 +60,9 @@ async def qvoter_model(params: UpdatedModelParams):
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
 
 
 @app.post("/majority-rule")
@@ -76,7 +78,9 @@ async def majority_rule_model(params: UpdatedModelParams):
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
 
 
 @app.post("/sznajd")
@@ -91,7 +95,9 @@ async def sznajd_model(params: UpdatedModelParams):
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
 
 
 @app.post("/cod")
@@ -114,7 +120,9 @@ async def cod_model(params: UpdatedModelParams):
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
 
 
 @app.post("/bias")
@@ -131,7 +139,9 @@ async def algorithm_bias_model(params: UpdatedModelParams):
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
 
 
 @app.post("/hegselmann")
@@ -141,13 +151,31 @@ async def hegselmann_krause_model(params: UpdatedModelParams):
     # Model selection
     model = op.HKModel(g)
     config = mc.Configuration()
-    config.add_model_parameter("epsilon", params.epsilion)
+    config.add_model_parameter("epsilon", params.epsilon)
     config.add_model_parameter('fraction_infected', params.initial_fraction)
 
     model.set_initial_status(config)
 
     # Simulation execution
-    return model.iteration_bunch(params.iterations)
+    iters = model.iteration_bunch(params.iterations)
+    iters = parse_iterations(iters)
+    return iters
+
+# Do ustalenia
+# @app.post("/weighted_hegselmann")
+# async def hegselmann_krause_model(params: UpdatedModelParams):
+#     g = json_graph.node_link_graph(params.data)
+#
+#     # Model selection
+#     model = op.WHKModel(g)
+#     config = mc.Configuration()
+#     config.add_model_parameter("epsilon", params.epsilion)
+#     config.add_model_parameter('fraction_infected', params.initial_fraction)
+#
+#     model.set_initial_status(config)
+#
+#     # Simulation execution
+#     return model.iteration_bunch(params.iterations)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)

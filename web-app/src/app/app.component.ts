@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { GraphService } from './services/graph-service';
 import G6 from '@antv/g6';
-import { Graph, votersDTO } from './models/graph-model';
-import {
-  Kinds
-} from "../../../../../../AppData/Local/Programs/Python/Python310/Lib/site-packages/bokeh/server/static/js/lib/core/kinds";
-import Null = Kinds.Null;
-import {
-  button
-} from "../../../../../../AppData/Local/Programs/Python/Python310/Lib/site-packages/bokeh/server/static/js/lib/core/dom";
-
+import { Graph, votersDTO, Model } from './models/graph-model';
+import {FormControl, FormGroup} from "@angular/forms";
+import {ModelParams} from "./models/model-params";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,23 +13,56 @@ export class AppComponent implements OnInit {
   selected: any;
   response: any;
   graph: Graph | any;
-
+  selectedModel: number | any = 1;
   graph_temp: Graph | any;
 
   graph_canvas: any = null;
 
   num: number | undefined;
 
-  models = [
-    { id: 1, name: 'Voter' },
-    { id: 2, name: 'Q-Voter' },
-    { id: 3, name: 'Majority Rule' },
-    { id: 4, name: 'Sznajd Model' },
-    { id: 5, name: 'Cognitive Opinion Dynamics' },
-    { id: 6, name: 'Algorithmic Bias Media Model' },
-    { id: 7, name: 'Hegselmann-Krause' },
-    { id: 8, name: 'Weighted Hegselmann-Krause' },
+  models: Model[] = [
+    { id: 1, name: 'Voter', path: 'voter' },
+    { id: 2, name: 'Q-Voter', path: 'qvoter' },
+    { id: 3, name: 'Majority Rule', path: 'majority-rule' },
+    { id: 4, name: 'Sznajd Model', path: 'sznajd' },
+    { id: 5, name: 'Cognitive Opinion Dynamics', path: 'cod' },
+    { id: 6, name: 'Algorithmic Bias Media Model', path: 'bias' },
+    { id: 7, name: 'Hegselmann-Krause', path: 'hegselmann' },
+    { id: 8, name: 'Weighted Hegselmann-Krause', path: 'weighted_voter' },
   ];
+
+   ModelParams = new FormGroup({
+     data: new FormControl<Graph|any>(null),
+    initial_fraction: new FormControl<number|null>(null),
+    iterations: new FormControl<number|null>(null),
+    q: new FormControl<number|null>(null),
+     i: new FormControl<number|null>(null),
+     b_min: new FormControl<number|null>(null),
+     b_max: new FormControl<number|null>(null),
+     t_min: new FormControl<number|null>(null),
+     t_max: new FormControl<number|null>(null),
+     r_negative: new FormControl<number|null>(null),
+     r_neutral: new FormControl<number|null>(null),
+     r_positive: new FormControl<number|null>(null),
+     epsilon: new FormControl<number|null>(null),
+     gamma: new FormControl<number|null>(null),
+  });
+
+
+
+   callingFunction() {
+     this.ModelParams.value.data = this.graph
+     console.log(this.ModelParams.value, this.models[this.selectedModel - 1].path)
+      this.graphService
+        .getIterations(this.models[this.selectedModel - 1].path, this.ModelParams.value as ModelParams)
+        .subscribe((voters) => {
+          this.response = voters;
+          console.log(this.response)
+          this.graph_temp = this.mapGraphData(this.graph)
+          this.graph_temp = this.getInitialPosition(this.graph_temp, this.response)
+          this.renderGraph(this.graph_temp)
+        });
+   }
 
   constructor(private graphService: GraphService) {}
 
@@ -43,45 +70,11 @@ export class AppComponent implements OnInit {
     this.buildForm();
 
     this.graphService.getGraph().subscribe((graph) => {
-     // console.log(graph);
-      this.graphService
-        .getIterations('voter', {
-          data: graph,
-          initial_fraction: 0.1,
-          iterations: 10,
-        })
-        .subscribe((voters) => {
-          this.response = voters;
-          this.graph_temp = this.mapGraphData(graph)
-          this.graph = graph
-          this.graph_temp = this.getInitialPosition(this.graph_temp, this.response)
-          this.renderGraph(this.graph_temp)
-        });
+      this.graph = graph
     });
-
-    /*this.graphService.getGraph().pipe(subscribe((data) => {
-      this.graphData = data;
-      this.mapGraphData(data);
-      console.log(this.graphData);
-      this.visualizeGraph(this.graphData);
-    }));*/
   }
 
-
-  visualizeGraph(data: any): void {
-    const graph = new G6.Graph({
-      container: 'mountNode',
-      width: 800,
-      height: 500,
-      modes: {
-        default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // Allow users to drag canvas, zoom canvas, and drag nodes
-      },
-    });
-    graph.data(data);
-    graph.render();
-  }
-
-  createGraphCanvas(data: Graph): void{
+  createGraphCanvas(): void{
 
     this.graph_canvas = new G6.Graph({
       container: 'mountNode',
@@ -97,14 +90,15 @@ export class AppComponent implements OnInit {
     });
 
   }
-  async renderGraph(data: Graph): Promise<void>{
+
+  renderGraph(data: Graph): void{
     if (!this.graph_canvas){
-      this.createGraphCanvas(data)
+      this.createGraphCanvas()
       this.graph_canvas.data(data)
-      await this.graph_canvas.render()
+      this.graph_canvas.render()
     }
     else {
-     await this.graph_canvas.changeData(data)
+      this.graph_canvas.changeData(data)
     }
   }
 
@@ -180,7 +174,7 @@ export class AppComponent implements OnInit {
         console.log(this.response.iterations[i])
         this.graph_temp = this.getIterationChange(this.graph_temp, i)
         sleep(1000)
-        this.renderGraph(this.graph_temp).then((value) => console.log(value));
+        this.renderGraph(this.graph_temp)
     }
   }
 
