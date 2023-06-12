@@ -4,6 +4,7 @@ import G6 from '@antv/g6';
 import { Graph, Model, votersDTO } from './models/graph-model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ModelParams } from './models/model-params';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -65,7 +66,9 @@ export class AppComponent implements OnInit {
       });
   }
 
-  constructor(private graphService: GraphService) {}
+  constructor(private graphService: GraphService, private titleService: Title) {
+    this.titleService.setTitle('Diffusion modelling');
+  }
 
   ngOnInit(): void {
     this.graphService.getGraph().subscribe((graph) => {
