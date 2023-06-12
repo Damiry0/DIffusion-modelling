@@ -2,6 +2,12 @@
   <h1>Diffusion Modelling</h1>
 </header>
 
+<style>
+        /* Set display to none for image*/
+        #image {
+            display: none;
+        }
+    </style>
 
 <h4>Select Opinion Model:</h4>
 <mat-form-field appearance="fill">
@@ -57,6 +63,26 @@
        <div class="space"> </div>
        <button type="reset">Reset</button>
 </form>
+
+  <div>
+  <img id="image" [src]="img_url" alt="Figure">
+</div>
+  <button type="button" (click)= "showImage();" id="btnID">
+        Show Image
+    </button>
+
+    <script>
+        function show() {
+            /* Access image by id and change
+            the display property to block*/
+            document.getElementById('image')
+                .style.display = "block";
+            document.getElementById('btnID')
+                .style.display = "none";
+        }
+    </script>
+
+
 </ng-template>
 
 <ng-template [ngIf]="selectedModel==2">

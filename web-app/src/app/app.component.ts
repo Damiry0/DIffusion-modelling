@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   selectedModel: number | any = 1;
   graph_temp: Graph | any;
 
+  img_url: string = `../assets/images/opinion_ev.png?${Date.now()}`
   graph_canvas: any = null;
 
   num: number | undefined;
@@ -64,11 +65,19 @@ export class AppComponent implements OnInit {
         });
    }
 
+    showImage() {
+          const img =  document.getElementById('image')
+          // @ts-ignore
+      img.style.display = "block";
+          const btn =  document.getElementById('btnID')
+                // @ts-ignore
+      btn.style.display = "none";
+        }
+
   constructor(private graphService: GraphService) {}
 
   ngOnInit(): void {
     this.buildForm();
-
     this.graphService.getGraph().subscribe((graph) => {
       this.graph = graph
     });
