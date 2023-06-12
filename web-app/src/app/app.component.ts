@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { GraphService } from './services/graph-service';
 import G6 from '@antv/g6';
-import { Graph, votersDTO, Model } from './models/graph-model';
-import {FormControl, FormGroup} from "@angular/forms";
-import {ModelParams} from "./models/model-params";
+import { Graph, Model, votersDTO } from './models/graph-model';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ModelParams } from './models/model-params';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,8 +19,6 @@ export class AppComponent implements OnInit {
 
   graph_canvas: any = null;
 
-  num: number | undefined;
-
   models: Model[] = [
     { id: 1, name: 'Voter', path: 'voter' },
     { id: 2, name: 'Q-Voter', path: 'qvoter' },
@@ -31,123 +30,118 @@ export class AppComponent implements OnInit {
     { id: 8, name: 'Weighted Hegselmann-Krause', path: 'weighted_voter' },
   ];
 
-   ModelParams = new FormGroup({
-     data: new FormControl<Graph|any>(null),
-    initial_fraction: new FormControl<number|null>(null),
-    iterations: new FormControl<number|null>(null),
-    q: new FormControl<number|null>(null),
-     i: new FormControl<number|null>(null),
-     b_min: new FormControl<number|null>(null),
-     b_max: new FormControl<number|null>(null),
-     t_min: new FormControl<number|null>(null),
-     t_max: new FormControl<number|null>(null),
-     r_negative: new FormControl<number|null>(null),
-     r_neutral: new FormControl<number|null>(null),
-     r_positive: new FormControl<number|null>(null),
-     epsilon: new FormControl<number|null>(null),
-     gamma: new FormControl<number|null>(null),
+  ModelParams = new FormGroup({
+    data: new FormControl<Graph | any>(null),
+    initial_fraction: new FormControl<number | null>(null),
+    iterations: new FormControl<number | null>(null),
+    q: new FormControl<number | null>(null),
+    i: new FormControl<number | null>(null),
+    b_min: new FormControl<number | null>(null),
+    b_max: new FormControl<number | null>(null),
+    t_min: new FormControl<number | null>(null),
+    t_max: new FormControl<number | null>(null),
+    r_negative: new FormControl<number | null>(null),
+    r_neutral: new FormControl<number | null>(null),
+    r_positive: new FormControl<number | null>(null),
+    epsilon: new FormControl<number | null>(null),
+    gamma: new FormControl<number | null>(null),
   });
 
-
-
-   callingFunction() {
-     this.ModelParams.value.data = this.graph
-     console.log(this.ModelParams.value, this.models[this.selectedModel - 1].path)
-      this.graphService
-        .getIterations(this.models[this.selectedModel - 1].path, this.ModelParams.value as ModelParams)
-        .subscribe((voters) => {
-          this.response = voters;
-          console.log(this.response)
-          this.graph_temp = this.mapGraphData(this.graph)
-          this.graph_temp = this.getInitialPosition(this.graph_temp, this.response)
-          this.renderGraph(this.graph_temp)
-        });
-   }
+  callingFunction() {
+    this.ModelParams.value.data = this.graph;
+    this.graphService
+      .getIterations(
+        this.models[this.selectedModel - 1].path,
+        this.ModelParams.value as ModelParams
+      )
+      .subscribe((voters) => {
+        this.response = voters;
+        this.graph_temp = this.mapGraphData(this.graph);
+        this.graph_temp = this.getInitialPosition(
+          this.graph_temp,
+          this.response
+        );
+        this.renderGraph(this.graph_temp);
+      });
+  }
 
   constructor(private graphService: GraphService) {}
 
   ngOnInit(): void {
-    this.buildForm();
-
     this.graphService.getGraph().subscribe((graph) => {
-      this.graph = graph
+      this.graph = graph;
     });
   }
 
-  createGraphCanvas(): void{
-
+  createGraphCanvas(): void {
     this.graph_canvas = new G6.Graph({
       container: 'mountNode',
       width: 800,
       height: 500,
       animate: true,
       animateCfg: {
-    duration: 1000, // Number, the duration of one animation
+        duration: 1000, // Number, the duration of one animation
       },
       modes: {
         default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // Allow users to drag canvas, zoom canvas, and drag nodes
       },
     });
-
   }
 
-  renderGraph(data: Graph): void{
-    if (!this.graph_canvas){
-      this.createGraphCanvas()
-      this.graph_canvas.data(data)
-      this.graph_canvas.render()
-    }
-    else {
-      this.graph_canvas.changeData(data)
+  renderGraph(data: Graph): void {
+    if (!this.graph_canvas) {
+      this.createGraphCanvas();
+      this.graph_canvas.data(data);
+      this.graph_canvas.render();
+    } else {
+      this.graph_canvas.changeData(data);
     }
   }
 
-  getInitialPosition(graphData: Graph, iterData: votersDTO): Graph{
-
-    iterData = this.response
-    iterData.initial_condition = iterData.initial_condition.map((conditions) =>{
-      conditions.key = conditions.key.toString();
-      conditions.value = conditions.value.toString()
-      return conditions;
-    });
-    iterData.iterations = iterData.iterations.map((iteration) =>{
+  getInitialPosition(graphData: Graph, iterData: votersDTO): Graph {
+    iterData = this.response;
+    iterData.initial_condition = iterData.initial_condition.map(
+      (conditions) => {
+        conditions.key = conditions.key.toString();
+        conditions.value = conditions.value.toString();
+        return conditions;
+      }
+    );
+    iterData.iterations = iterData.iterations.map((iteration) => {
       iteration.key = iteration.key.toString();
-      iteration.value = iteration.value.toString()
+      iteration.value = iteration.value.toString();
       return iteration;
     });
-    for (let i = 0;i<iterData.initial_condition.length;i++){
-        let node_id: number = +iterData.initial_condition[i].key;
-        graphData.nodes[node_id]['style'].fill = '#FF3333'
+    for (let i = 0; i < iterData.initial_condition.length; i++) {
+      let node_id: number = +iterData.initial_condition[i].key;
+      graphData.nodes[node_id]['style'].fill = '#FF3333';
     }
 
-    return graphData
+    return graphData;
   }
 
   getIterationChange(graphData: Graph, id: number): Graph {
-
     let node_id: number = +this.response.iterations[id].key;
     let node_value: number = +this.response.iterations[id].value;
-    if (node_value == 1){
-      graphData.nodes[node_id]['style'].fill = '#FF3333'
+    if (node_value == 1) {
+      graphData.nodes[node_id]['style'].fill = '#FF3333';
+    } else if (node_value == 0) {
+      graphData.nodes[node_id]['style'].fill = '#3A33FF';
     }
-    else if (node_value == 0){
-      graphData.nodes[node_id]['style'].fill = '#3A33FF'
-    }
-    return graphData
+    return graphData;
   }
 
-
   mapGraphData(graphData: Graph): Graph {
-
     function getRandomArbitrary(min: number, max: number) {
-        return Math.random() * (max - min) + min;
-    }   // Simple random number generator
+      return Math.random() * (max - min) + min;
+    } // Simple random number generator
     graphData.nodes = graphData.nodes.map((node) => {
       node.id = node.id.toString();
       node.x = getRandomArbitrary(10, 790);
       node.y = getRandomArbitrary(10, 490);
-      node["style"] = {
-        ["fill"] : '#3A33FF'}
+      node['style'] = {
+        ['fill']: '#3A33FF',
+      };
       return node;
     });
     graphData.links = graphData.links.map((edge) => {
@@ -156,36 +150,21 @@ export class AppComponent implements OnInit {
       return edge;
     });
 
-    let arr = graphData
+    let arr = graphData;
     arr = JSON.parse(JSON.stringify(arr).split('"links":').join('"edges":'));
     return arr;
   }
 
-   animateGraph(): void {
-    function sleep(milliseconds: number) {
-      const date = Date.now();
-      let currentDate = null;
-      do {
-        currentDate = Date.now();
-      } while (currentDate - date < milliseconds);
-    }
-
-    for (let i = 0; i < this.response.iterations.length; i++) {
-        console.log(this.response.iterations[i])
-        this.graph_temp = this.getIterationChange(this.graph_temp, i)
-        sleep(1000)
-        this.renderGraph(this.graph_temp)
-    }
+  async animateGraph(): Promise<void> {
+    let i = 0;
+    const loop = setInterval(async () => {
+      this.graph_temp = this.getIterationChange(this.graph_temp, i);
+      console.log(i);
+      i++;
+      await this.renderGraph(this.graph_temp);
+      if (i === this.response.iterations.length) {
+        clearInterval(loop);
+      }
+    }, 100);
   }
-
-  animate_test(): void{
-    let graph = this.mapGraphData(this.graph)
-    console.log(graph)
-    this.renderGraph(graph)
-
-  }
-
-  buildForm() {}
-
-
 }
