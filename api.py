@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from networkx.readwrite import json_graph
 from starlette.middleware.cors import CORSMiddleware
+from ndlib.viz.mpl.OpinionEvolution import OpinionEvolution
 
 from ModelParams import UpdatedModelParams
 from iterations import parse_iterations
@@ -20,6 +21,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+async def model_graph(model, iterations):
+    viz = OpinionEvolution(model, iterations)
+    viz.plot("web-app/src/assets/images/opinion_ev.png")
 
 
 @app.get("/graphs")
@@ -43,6 +49,7 @@ async def voter_model(params: UpdatedModelParams):
     # Simulation execution
 
     iters = model.iteration_bunch(params.iterations)
+    await model_graph(model, iters)
     iters = parse_iterations(iters)
     return iters
 
@@ -61,6 +68,7 @@ async def qvoter_model(params: UpdatedModelParams):
 
     # Simulation execution
     iters = model.iteration_bunch(params.iterations)
+    await model_graph(model, iters)
     iters = parse_iterations(iters)
     return iters
 
@@ -79,6 +87,7 @@ async def majority_rule_model(params: UpdatedModelParams):
 
     # Simulation execution
     iters = model.iteration_bunch(params.iterations)
+    await model_graph(model, iters)
     iters = parse_iterations(iters)
     return iters
 
@@ -96,6 +105,7 @@ async def sznajd_model(params: UpdatedModelParams):
 
     # Simulation execution
     iters = model.iteration_bunch(params.iterations)
+    await model_graph(model, iters)
     iters = parse_iterations(iters)
     return iters
 
@@ -140,6 +150,7 @@ async def algorithm_bias_model(params: UpdatedModelParams):
 
     # Simulation execution
     iters = model.iteration_bunch(params.iterations)
+    await model_graph(model, iters)
     iters = parse_iterations(iters)
     return iters
 
@@ -158,8 +169,10 @@ async def hegselmann_krause_model(params: UpdatedModelParams):
 
     # Simulation execution
     iters = model.iteration_bunch(params.iterations)
+    await model_graph(model, iters)
     iters = parse_iterations(iters)
     return iters
+
 
 # Do ustalenia
 # @app.post("/weighted_hegselmann")

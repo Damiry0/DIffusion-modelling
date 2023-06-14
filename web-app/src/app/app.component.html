@@ -219,10 +219,15 @@
     <button (click)="animateGraph()">Animation</button>
   </div>
 
-  <div class="col-6">
+  <div class="col-xxl-6">
     <mat-label>Graphs</mat-label>
     <figure id="mountNode"></figure>
+    <mat-label>Model Statistics</mat-label>
+    <img *ngIf="graph_temp"  id="image" [src]="img_url" alt="Figure" style="transform: scale(140%);">
   </div>
+
+
+
 </div>
 
 <!--<button class="btn btn-primary" (click)="animateGraph();" type="button">Call</button>-->

@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
 
   graph_canvas: any = null;
 
+  img_url: string = `../assets/images/opinion_ev.png?${Date.now()}`
   models: Model[] = [
     { id: 1, name: 'Voter', path: 'voter' },
     { id: 2, name: 'Q-Voter', path: 'qvoter' },
